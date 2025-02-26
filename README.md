@@ -5,7 +5,6 @@
 # oc new-app <your-dockerhub-username>/webhook-server:latest --name=webhook-server -n webhook-demo
 
 
-# oc new-app openshift/python:3.11-ubi9~https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
 # oc new-app python:3.9-slim~https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
 # oc new-app https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
 # oc get pods -n webhook-demo
@@ -27,4 +26,55 @@ spec:
     webhookConfigs:
     - url: 'http://webhook-server-webhook-demo.apps.cluster.example.com/webhook'
       sendResolved: true
+
+
+global:
+  resolve_timeout: 5m
+inhibit_rules:
+  - equal:
+      - namespace
+      - alertname
+    source_matchers:
+      - severity = critical
+    target_matchers:
+      - severity =~ warning|info
+  - equal:
+      - namespace
+      - alertname
+    source_matchers:
+      - severity = warning
+    target_matchers:
+      - severity = info
+  - equal:
+      - namespace
+    source_matchers:
+      - alertname = InfoInhibitor
+    target_matchers:
+      - severity = info
+receivers:
+  - name: Default
+    webhook_configs:
+      - url: >-
+          http://webhook-server-webhook-demo.apps.itzocp-270007kue8-6iomz0ud.cp.fyre.ibm.com/
+  - name: Watchdog
+  - name: Critical
+  - name: 'null'
+route:
+  group_by:
+    - namespace
+  group_interval: 5m
+  group_wait: 30s
+  receiver: Default
+  repeat_interval: 12h
+  routes:
+    - matchers:
+        - alertname = Watchdog
+      receiver: Watchdog
+    - matchers:
+        - alertname = InfoInhibitor
+      receiver: 'null'
+    - matchers:
+        - severity = critical
+      receiver: Critical
+
 ```
