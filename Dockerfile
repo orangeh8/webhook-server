@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # 复制代码到容器
-COPY webhook_server.py .
+COPY app.py .
 
 # 安装 Flask
 RUN pip install flask
@@ -14,7 +14,7 @@ RUN pip install flask
 EXPOSE 5000
 
 # 运行应用
-CMD ["python", "webhook_server.py"]
+CMD ["python", "app.py"]
 
 
 
@@ -24,9 +24,11 @@ CMD ["python", "webhook_server.py"]
 # oc new-app <your-dockerhub-username>/webhook-server:latest --name=webhook-server -n webhook-demo
 
 
-# oc new-app python:3.9~https://github.com/<your-username>/<your-repo>.git --name=webhook-server -n webhook-demo
+# oc new-app python:3.9~https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
+# oc new-app openshift/python:3.11-ubi9~https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
 # oc get pods -n webhook-demo
 # oc expose svc/webhook-server -n webhook-demo
+
 
 
 
