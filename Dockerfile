@@ -11,7 +11,7 @@ COPY app.py .
 RUN pip install flask
 
 # 暴露端口
-EXPOSE 5000
+EXPOSE 8080
 
 # 运行应用
 CMD ["python", "app.py"]
