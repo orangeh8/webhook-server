@@ -8,6 +8,7 @@
 # oc new-app python:3.9~https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
 # oc new-app openshift/python:3.11-ubi9~https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
 # oc new-app python:3.9-slim~https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
+# oc new-app https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
 # oc get pods -n webhook-demo
 # oc expose svc/webhook-server -n webhook-demo
 
