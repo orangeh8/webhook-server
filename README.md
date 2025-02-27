@@ -1,4 +1,7 @@
 
+```
+curl -X POST -H "Content-Type: application/json" -d '{"status": "firing", "alerts": [{"labels": {"alertname": "TestAlert"}}]}' http://localhost:8080/webhook
+
 # docker build -t webhook-server:latest .
 # docker run -p 5000:5000 webhook-server:latest
 # docker tag webhook-server:latest <your-dockerhub-username>/webhook-server:latest
@@ -9,7 +12,7 @@
 # oc new-app https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
 # oc get pods -n webhook-demo
 # oc expose svc/webhook-server -n webhook-demo
-
+```
 
 ```
 apiVersion: monitoring.coreos.com/v1alpha1
@@ -55,7 +58,7 @@ receivers:
   - name: Default
     webhook_configs:
       - url: >-
-          http://webhook-server-webhook-demo.apps.itzocp-270007kue8-6iomz0ud.cp.fyre.ibm.com/
+          http://example-webhook.com/
   - name: Watchdog
   - name: Critical
   - name: 'null'
