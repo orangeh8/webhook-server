@@ -10,8 +10,12 @@ COPY app.py .
 # 安装 Flask
 RUN pip install flask
 
+USER root
+
 RUN chgrp -R 0 /app && \
 	chmod -R g=u /app
+
+USER 10001
 
 # 暴露端口
 EXPOSE 8080
