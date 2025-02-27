@@ -1,36 +1,10 @@
-
+### 本地测试
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"status": "firing", "alerts": [{"labels": {"alertname": "TestAlert"}}]}' http://localhost:8080/webhook
-
-# docker build -t webhook-server:latest .
-# docker run -p 5000:5000 webhook-server:latest
-# docker tag webhook-server:latest <your-dockerhub-username>/webhook-server:latest
-# oc new-app <your-dockerhub-username>/webhook-server:latest --name=webhook-server -n webhook-demo
-
-
-# oc new-app python:3.9-slim~https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
-# oc new-app https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
-# oc get pods -n webhook-demo
-# oc expose svc/webhook-server -n webhook-demo
 ```
 
+### 修改 AlertConfig
 ```
-apiVersion: monitoring.coreos.com/v1alpha1
-kind: AlertmanagerConfig
-metadata:
-  name: webhook-config
-  namespace: openshift-monitoring
-spec:
-  route:
-    groupBy: ['alertname']
-    receiver: 'webhook-receiver'
-  receivers:
-  - name: 'webhook-receiver'
-    webhookConfigs:
-    - url: 'http://webhook-server-webhook-demo.apps.cluster.example.com/webhook'
-      sendResolved: true
-
-
 global:
   resolve_timeout: 5m
 inhibit_rules:
@@ -80,4 +54,19 @@ route:
         - severity = critical
       receiver: Critical
 
+```
+
+
+
+```
+# docker build -t webhook-server:latest .
+# docker run -p 5000:5000 webhook-server:latest
+# docker tag webhook-server:latest <your-dockerhub-username>/webhook-server:latest
+# oc new-app <your-dockerhub-username>/webhook-server:latest --name=webhook-server -n webhook-demo
+
+
+# oc new-app python:3.9-slim~https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
+# oc new-app https://github.com/orangeh8/webhook-server.git --name=webhook-server -n webhook-demo
+# oc get pods -n webhook-demo
+# oc expose svc/webhook-server -n webhook-demo
 ```
